@@ -1,0 +1,12 @@
+{
+  "ID": "46c3bba9-9f0f-4b8b-98bf-a5d2dec16a6e",
+  "ActionKeyword": "code",
+  "Name": "Vscode Recent Folder",
+  "Description": "Open recent folder in vscode",
+  "Author": "Jerry",
+  "Version": "0.0.1",
+  "Language": "JavaScript",
+  "ExecuteFileName": "./dist/index.js",
+  "Website": "https://github.com/Joehoel/flow-launcher-plugin-vscode-recent",
+  "IcoPath": "./assets/app.png"
+}
