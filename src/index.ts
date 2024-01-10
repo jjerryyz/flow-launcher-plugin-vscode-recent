@@ -16,11 +16,19 @@ const userStoragePath = path.resolve("C:/Users/jerry/AppData/Roaming/Code/User/g
 const userStorage = JSON.parse(fs.readFileSync(userStoragePath, 'utf-8'))
 
 const projectList = Object.keys(userStorage.profileAssociations.workspaces)
-	.filter(f => f.startsWith('file://'))
-	.map(f => ({
-		name: path.basename(url.fileURLToPath(f)),
-		path: url.fileURLToPath(f)
-	}));
+	.filter(f => {
+		if (!f.startsWith('file://')) return false;
+		if (fs.existsSync(url.fileURLToPath(f))) {
+			return true;
+		}
+	})
+	.map(f => {
+		const _path = url.fileURLToPath(f)
+		return {
+			name: path.basename(_path),
+			path: _path
+		}
+	});
 
 
 flow.on("query", (params = []) => {

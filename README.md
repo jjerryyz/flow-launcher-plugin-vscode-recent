@@ -4,5 +4,6 @@
 ## TodoList
 
 - [ ] Command to open System FS Folder
-- [ ] Filter Not Exist Folder
+- [x] Filter Not Exist Folder
 - [ ] Command to git clone And Open Folder
+- [ ] Shift+Enter Case

@@ -128,7 +128,7 @@ export class Flow<TMethods, TSettings = Record<string, string>>
         dontHideAfterAction: false,
       },
       ContextData: [],
-      			IcoPath: `assets\\app.png`,
+      IcoPath: `assets\\app.png`,
       Score: 0,
     };
     return console.log(JSON.stringify({ result: [hint] }));
