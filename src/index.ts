@@ -4,6 +4,7 @@ import { Flow } from "./lib/flow";
 import logger from "./lib/logger";
 import url from 'url'
 import { exec } from 'child_process';
+import Fuse from 'fuse.js';
 
 // The events are the custom events that you define in the flow.on() method.
 const events = ["search"] as const;
@@ -30,34 +31,26 @@ const projectList = Object.keys(userStorage.profileAssociations.workspaces)
 		}
 	});
 
+const fuse = new Fuse(projectList, {
+	keys: ['name']
+});
+
 
 flow.on("query", (params = []) => {
 
 	const [query] = params as string[];
 
-	let results: typeof projectList = []
-
-
 	if (!query) {
 		return flow.showInputHint();
 	}
 
-	try {
-		results = projectList.filter(f => {
-			if (f.name.toLowerCase().includes(query.toLowerCase())) {
-				return true
-			}
-		})
-	} catch (error) {
-	}
-
-	const result = results.map(r => {
+	const result = fuse.search(query).map(({ item }) => {
 		return {
-			Title: r.name,
+			Title: item.name,
 			Subtitle: '',
 			JsonRPCAction: {
 				method: 'search',
-				parameters: [r.path],
+				parameters: [item.path],
 				dontHideAfterAction: false,
 			},
 			ContextData: [],
