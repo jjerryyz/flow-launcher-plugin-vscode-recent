@@ -4,7 +4,7 @@ import url from 'node:url'
 import fg from 'fast-glob'
 
 export function buildIndex() {
-  const projects = fg.sync('d:/Workspace/**/*', { onlyDirectories: true, deep: 1, ignore: ['node_modules', '.git', 'dist'] }).map(p => path.resolve(p))
+  const projects = fg.sync('d:/Workspace/**/*', { onlyDirectories: true, deep: 2, ignore: ['node_modules', '.git', 'dist'] }).map(p => path.resolve(p))
 
   const userStoragePath = path.join(process.env.APPDATA!, '/Code/User/globalStorage/storage.json')
 
@@ -25,3 +25,5 @@ export function buildIndex() {
 
   fs.writeFileSync('./index.json', JSON.stringify(uniques), 'utf-8')
 }
+
+buildIndex()
