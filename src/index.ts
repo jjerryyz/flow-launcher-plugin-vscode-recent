@@ -1,6 +1,7 @@
 import { exec } from 'node:child_process'
 import fs from 'node:fs'
-import { buildIndex } from './data'
+import path from 'node:path'
+import { buildIndex, getIndexData, getVscodeCache } from './data'
 import { Flow } from './lib/flow'
 import logger from './lib/logger'
 
@@ -10,10 +11,12 @@ type Events = (typeof events)[number]
 
 const flow = new Flow<Events>()
 
-const indexData: { name: string, path: string }[] = JSON.parse(fs.readFileSync('./index.json', 'utf-8') || '[]')
+const vscodeCache = getVscodeCache()
+
+const indexData = getIndexData()
 
 const buildIndexCommand = {
-  Title: 'Build Index',
+  Title: '✨Build Index',
   Subtitle: '',
   JsonRPCAction: {
     method: 'search',
@@ -25,32 +28,50 @@ const buildIndexCommand = {
   Score: 0,
 }
 
+function getResult(query: string) {
+  let collection: string[] = []
+  if (!query) {
+    collection = vscodeCache.slice(0, 5)
+  }
+  else {
+    collection = Array.from(new Set([...indexData, ...vscodeCache]))
+    // logger.info(result.map(f=> f.Title.slice(0,5)).join(','))
+  }
+
+  return collection
+    // .filter(item => new RegExp(`${query}`, 'i').test(item))
+    .map((p) => {
+      const f = path.resolve(p)
+      return {
+        name: path.basename(f),
+        path: f,
+      }
+    })
+}
+
 flow.on('query', (params = []) => {
   const [query] = params as string[]
 
-  let result = []
-  if (!query) {
-    result = [buildIndexCommand]
+  if (query === 'bi') {
+    console.log(JSON.stringify({ result: [buildIndexCommand] }))
+    return
   }
-  else {
-    result = indexData
-      .filter(item => new RegExp(`${query}`, 'i').test(item.path))
-      .map((item: any) => {
-        return {
-          Title: item.name,
-          Subtitle: item.path,
-          JsonRPCAction: {
-            method: 'search',
-            parameters: [item.path, true],
-            dontHideAfterAction: false,
-          },
-          ContextData: [],
-          IcoPath: 'assets\\app.png',
-          Score: 0,
-        }
-      })
-    // logger.info(result.map(f=> f.Title.slice(0,5)).join(','))
-  }
+
+  const result = getResult(query)
+    .map((item: any) => {
+      return {
+        Title: item.name,
+        Subtitle: item.path,
+        JsonRPCAction: {
+          method: 'search',
+          parameters: [item.path, true],
+          dontHideAfterAction: false,
+        },
+        ContextData: [],
+        IcoPath: 'assets\\app.png',
+        Score: 0,
+      }
+    })
 
   console.log(JSON.stringify({ result }))
 })

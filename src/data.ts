@@ -3,27 +3,27 @@ import path from 'node:path'
 import url from 'node:url'
 import fg from 'fast-glob'
 
-export function buildIndex() {
-  const projects = fg.sync('d:/Workspace/**/*', { onlyDirectories: true, deep: 2, ignore: ['node_modules', '.git', 'dist'] }).map(p => path.resolve(p))
-
+export function getVscodeCache() {
   const userStoragePath = path.join(process.env.APPDATA!, '/Code/User/globalStorage/storage.json')
 
   const userStorage = JSON.parse(fs.readFileSync(userStoragePath, 'utf-8'))
 
-  const vscodeCache = Object.keys(userStorage.profileAssociations.workspaces)
+  return Object.keys(userStorage.profileAssociations.workspaces)
     .filter(f => f.startsWith('file://'))
     .map(url.fileURLToPath)
     .filter(p => fs.existsSync(p))
-
-  const uniques = Array.from(new Set([...projects, ...vscodeCache]))
-    .map((f) => {
-      return {
-        name: path.basename(f),
-        path: f,
-      }
-    }).reverse()
-
-  fs.writeFileSync('./index.json', JSON.stringify(uniques), 'utf-8')
+    .reverse() // 取最近的
 }
 
-buildIndex()
+export function buildIndex() {
+  const projects = fg.sync('d:/Workspace/**/*', { onlyDirectories: true, deep: 2, ignore: ['node_modules', '.git', 'dist'] }).map(item => path.resolve(item))
+
+  fs.writeFileSync('./index.json', JSON.stringify(projects), 'utf-8')
+  console.log(projects)
+}
+
+export function getIndexData() {
+  return JSON.parse(fs.readFileSync('./index.json', 'utf-8') || '[]')
+}
+
+// buildIndex()
