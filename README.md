@@ -1,9 +1,8 @@
-# Open Vscode Recent Folder 
-
+# Open Vscode Recent Folder
 
 ## TodoList
 
-- [ ] Command to open System FS Folder
+- [x] Command to open System FS Folder
 - [x] Filter Not Exist Folder
-- [ ] Command to git clone And Open Folder
-- [ ] Shift+Enter Case
+- [x] Command to git clone And Open Folder
+- [x] Shift+Enter Case

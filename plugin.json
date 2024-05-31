@@ -7,6 +7,6 @@
   "Version": "0.0.1",
   "Language": "JavaScript",
   "ExecuteFileName": "./dist/index.js",
-  "Website": "https://github.com/Joehoel/flow-launcher-plugin-vscode-recent",
+  "Website": "https://github.com/jjerryyz/flow-launcher-plugin-vscode-recent",
   "IcoPath": "./assets/app.png"
 }
